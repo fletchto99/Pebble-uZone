@@ -1,6 +1,11 @@
 <?php
 
+require_once('inc/simple_html_dom.php');
+require_once('inc/uCardScrape.php');
+
 require_once('Balance.php');
+require_once('MealHistory.php');
+require_once('FlexHistory.php');
 
 class Functions
 {
@@ -22,15 +27,22 @@ class Functions
     {
         if ($this->username && $this->password) {
             switch ($method) {
+                case 'CheckLogin':
+                    $form = array('ID' => $this->ID, 'name' => $this->username, 'pass' => $this->password, 'optStudent' => 'optStudent');
+                    $login = self::getPageResult($form, $this->config['LOGIN_URL']);
+                    $this->result = array('login' => ($login ? 'success' : 'failed'));
+                    break;
                 case 'Balance':
-                    $balance = new Balance($this->username, $this->password, $this->config['ID'], $this->config['URL']);
-                    $this->result = $balance-> execute();
+                    $balance = new Balance($this->username, $this->password, $this->config['ID'], $this->config['BALANCE_URL']);
+                    $this->result = $balance->execute();
                     break;
                 case 'MealHistory':
-                    $this->result['error'] = 'Meal plan history is not yet implemented.';
+                    $meal = new MealHistory($this->username, $this->password, $this->config['ID'], $this->config['HISTORY_URL']);
+                    $this->result = $meal->execute();
                     break;
                 case 'FlexHistory':
-                    $this->result['error'] = 'Flex plan history is not yet implemented.';
+                    $flex = new FlexHistory($this->username, $this->password, $this->config['ID'], $this->config['HISTORY_URL']);
+                    $this->result = $flex->execute();
                     break;
                 case 'Deactivate':
                     $this->result['error'] = 'Deactivating your card is not yet implemented.';
@@ -41,6 +53,42 @@ class Functions
             }
         }
         echo json_encode($this->result);
+    }
+
+    static function findElement($html, $class, $pos)
+    {
+        $DOM = new simple_html_dom();
+        $DOM->load($html);
+        if ($DOM->find($class)) {
+            return array_values($DOM->find($class))[$pos];
+        }
+        return false;
+    }
+
+    static function elementToPlaintext($DOMelement)
+    {
+        return $DOMelement -> plaintext;
+    }
+
+    static function findElements($html, $class)
+    {
+        $DOM = new simple_html_dom();
+        $DOM->load($html);
+        if ($DOM->find($class)) {
+            return $DOM->find($class);
+        }
+        return null;
+    }
+
+    static function getPageResult($form_fill, $url)
+    {
+        $scrape = new uCardScrape($url, $form_fill);
+        $html = $scrape->fetchResult();
+
+        if (strpos($html, 'Login failed for Student number') !== false) {
+            return '';
+        }
+        return $html;
     }
 
 }

@@ -19,7 +19,7 @@ class uCardScrape
         $this->form = $form;
     }
 
-    public function login()
+    public function fetchResult()
     {
         $this->cURL($this->url);
         if ($this->form) {
