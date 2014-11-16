@@ -1,6 +1,21 @@
+//Imports
 var UI = require('ui');
 var ajax = require('ajax');
 var Settings = require('settings');
+
+//Variables
+var balance = new UI.Card({
+    title: 'Balance',
+    subtitle: 'Loading...'
+});
+
+var loading = new UI.Card({
+    title: 'uOCard Pebble',
+    subtitle: 'Loading...'
+});
+
+var fetchingBalance = true;
+
 
 //Setup
 Settings.config(
@@ -12,74 +27,129 @@ Settings.config(
     var data = JSON.parse(decodeURIComponent(e.response));
     Settings.data('username', data.username);
     Settings.data('password', data.password);
-    fetch();
+    loading.show();
+    setup();
   }
 );
 
-//Variables
-var balance = new UI.Card({
-    title: 'Balance',
-    subtitle: 'Loading...'
-});
-
-var menuItems = [
-    {
-        title: 'Balance',
-        subtitle: 'Meal & flex balance.'
-    },
-    {
-        title: 'Meal History',
-        subtitle: 'Last 10 meal purchases.'
-    },
-    {
-        title: 'Flex History',
-        subtitle: 'Last 10 flex purchases.'
-    },
-    {
-        title: 'Deactivate',
-        subtitle: 'Deactivate uOCard!'
-    }
-];
-
-var mainMenu = new UI.Menu({
-  sections: [{
-    title: 'uOCard Options',
-    items: menuItems
-  }]
-});
-
-var loading = true;
-var messages = ['Have some patience bro...', 'Waiting on uZone..', 'You already clicked me!', 'I\'m trying as hard as I can'];
-
-
 //Show the menu
-mainMenu.show();
-
-
-//Menu actions
-mainMenu.on('select', function(event) {
-    if (event.itemIndex === 0) {
-        balance.show();
-        fetch();
-    }
-});
+loading.show();
+setup();
 
 
 //Individual actions
 balance.on('click', 'down', function() {
-    balance.title('Balance');
-    balance.subtitle('Loading...');
-    if (!loading) {
-        fetch();
-    } else {
-        loadingMessage();
-    }
+    if (!fetchingBalance) {
+        updateCard('Balance', 'Loading...', balance);
+        fetchBalance();
+    } 
 });
 
 
 //Functions
-function fetch() { 
-    loading = true;
+function setup() { 
+    if (Settings.data('username') && Settings.data('password')) {
+        ajax({
+            url: 'http://fletchto99.com/other/uzone-pebble/web/api.php',
+            type: 'json',
+            method: 'post',
+            data:{
+                username:Settings.data('username'),
+                password:Settings.data('password'),
+                method:'MealPlanCheck'
+            },
+            cache: false
+          },
+          function(data) {
+              if (data.error) {
+                     showCard('Error', data.error, loading).show();
+              } else {
+                  var menuItems = [
+                                      {
+                                          title: 'Balance',
+                                          subtitle: 'Meal & flex balance.'
+                                      },
+                                      {
+                                          title: 'Meal History',
+                                          subtitle: 'Last 10 meal purchases.'
+                                      },
+                                      {
+                                          title: 'Flex History',
+                                          subtitle: 'Last 10 flex purchases.'
+                                      },
+                                      {
+                                          title: 'Deactivate',
+                                          subtitle: 'Deactivate uOCard!'
+                                      }
+                                  ];
+                  if(data.active ==='no') {
+                      menuItems = [
+                                      {
+                                          title: 'Balance',
+                                          subtitle: 'Meal & flex balance.'
+                                      },
+                                      {
+                                          title: 'Flex History',
+                                          subtitle: 'Last 10 flex purchases.'
+                                      },
+                                      {
+                                          title: 'Deactivate',
+                                          subtitle: 'Deactivate uOCard!'
+                                      }
+                                  ];
+
+                  }
+                  loading.hide();
+                  var mainMenu = new UI.Menu({
+                      sections: [{
+                          title: 'uOCard Options',
+                          items: menuItems
+                      }]
+                  });
+                  mainMenu.show();
+                  if (data.active === 'yes') {
+                  mainMenu.on('select', function(event) {                 
+                          if (event.itemIndex === 0) {
+                              fetchBalance();
+                          }
+                          if (event.itemIndex === 1) {
+                              fetchMealHistory();
+                          }
+                          if (event.itemIndex === 2) {
+                              fetchFlexHistory();
+                          }
+                          if (event.itemIndex === 3) {
+                              showCard('Deactivate', 'This is a work in progress.');
+                          }
+
+                  });
+                  } else {
+                      mainMenu.on('select', function(event) {                 
+                          if (event.itemIndex === 0) {
+                              fetchBalance();
+                          }
+                          if (event.itemIndex === 1) {
+                              fetchFlexHistory();
+                          }
+                          if (event.itemIndex === 2) {
+                              showCard('Deactivate', 'This is a work in progress.');
+                          }
+
+                  });
+                  }
+              }
+          },
+          function(error) {
+              showCard('Error', 'Error contacting server.', loading).show();
+          });
+    } else {
+        showCard('Error', 'Username and password not configured.');
+    }
+}
+
+function fetchBalance() { 
+    fetchingBalance = true;
+    balance.show();
     if (Settings.data('username') && Settings.data('password')) {
         ajax({
             url: 'http://fletchto99.com/other/uzone-pebble/web/api.php',
@@ -94,26 +164,132 @@ function fetch() {
           },
           function(data) {
               if (data.error) {
-                  prepareUI('Error', data.error);
+                  showCard('Error', data.error);
+                  fetchingBalance = false;
               } else {
-                  prepareUI('Balance', 'Meal: $' + data.meal + '\nFlex: $' + data.flex);
+                  updateCard('Balance', (data.meal != 'null'? 'Meal: $' + data.meal + '\n' : '') + 'Flex: $' + data.flex, balance);
+                  fetchingBalance = false;
               }
           },
           function(error) {
-              prepareUI('Error', 'Error contacting server.');
+              showCard('Error', 'Error contacting server.');
+              fetchingBalance = false;
           });
     } else {
-        prepareUI('Error', 'Username and password not configured.');
+        showCard('Error', 'Username and password not configured.');
+        fetchingBalance = false;
     }
 }
 
-function prepareUI(title, subtitle) {
-    loading = false;
-    balance.title(title);
-    balance.subtitle(subtitle);
-    balance.body('');
+function fetchMealHistory() { 
+    var card = showCard('Meal History', 'Loading...');
+    if (Settings.data('username') && Settings.data('password')) {
+        ajax({
+            url: 'http://fletchto99.com/other/uzone-pebble/web/api.php',
+            type: 'json',
+            method: 'post',
+            data:{
+                username:Settings.data('username'),
+                password:Settings.data('password'),
+                method:'MealHistory'
+            },
+            cache: false
+          },
+          function(data) {
+              if (data.error) {
+                  showCard('Error', data.error, card);
+              } else {
+                  card.hide();
+                  var menuItems = Array(data.length);
+                  for(var i=0;i<data.length;i++){
+                      menuItems[i] = {
+                          title: data[i].price,
+                          subtitle: data[i].date,
+                          description:data[i].description
+                      };
+                  }
+                  var history = new UI.Menu({
+                      sections: [{
+                          title: 'Mealplan History',
+                          items: menuItems
+                      }]
+                  });
+                  history.on('select', function(event) {
+                      showCard(menuItems[event.itemIndex].title, menuItems[event.itemIndex].subtitle, menuItems[event.itemIndex].description);
+                  });
+                  history.show();
+              }
+          },
+          function(error) {
+              showCard('Error', 'Error contacting server.', card);
+          });
+    } else {
+        showCard('Error', 'Username and password not configured.', card);
+    }
 }
 
-function loadingMessage() {
-    balance.body(messages[Math.floor(Math.random() * 4)]);
+function fetchFlexHistory() { 
+    var card = showCard('Flex History', 'Loading...');
+    if (Settings.data('username') && Settings.data('password')) {
+        ajax({
+            url: 'http://fletchto99.com/other/uzone-pebble/web/api.php',
+            type: 'json',
+            method: 'post',
+            data:{
+                username:Settings.data('username'),
+                password:Settings.data('password'),
+                method:'FlexHistory'
+            },
+            cache: false
+          },
+          function(data) {
+              if (data.error) {
+                  showCard('Error', data.error, card);
+              } else {
+                  card.hide();
+                  var menuItems = Array(data.length);
+                  for(var i=0;i<data.length;i++){
+                      menuItems[i] = {
+                          title: data[i].price,
+                          subtitle: data[i].date,
+                          description:data[i].description
+                      };
+                  }
+                  var history = new UI.Menu({
+                      sections: [{
+                          title: 'Flexplan History',
+                          items: menuItems
+                      }]
+                  });
+                  history.on('select', function(event) {
+                      showCard(menuItems[event.itemIndex].title, menuItems[event.itemIndex].subtitle, menuItems[event.itemIndex].description);
+                  });
+                  history.show();
+              }
+          },
+          function(error) {
+              showCard('Error', 'Error contacting server.', card);
+          });
+    } else {
+        showCard('Error', 'Username and password not configured.', card);
+    }
+}
+
+
+function showCard(title, subtitle, old) {
+    old.hide();
+    showCard(title, subtitle);
+}
+
+function showCard(title, subtitle) {
+    return new UI.Card({title: title,subtitle: subtitle}).show();
+}
+
+function showCard(title, subtitle, body) {
+    return new UI.Card({title: title,subtitle: subtitle, body: body}).show();
+}
+
+function updateCard(title, subtitle, card) {
+    card.title(title);
+    card.subtitle(subtitle);
 }
