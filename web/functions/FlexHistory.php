@@ -31,7 +31,7 @@ class FlexHistory
                     $i = 0;
                     $arr = array();
                     foreach ($rows as $row) {
-                        $arr['row_'.$i] = array('date' => functions::elementToPlaintext(functions::findElement($row, 'td', 0)),
+                        $arr[$i] = array('date' => functions::elementToPlaintext(functions::findElement($row, 'td', 0)),
                             'price' => functions::elementToPlaintext(functions::findElement($row, 'td', 1)),
                             'description' => functions::elementToPlaintext(functions::findElement($row, 'td', 4)));
                         $i++;
