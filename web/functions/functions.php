@@ -4,6 +4,7 @@ require_once('inc/simple_html_dom.php');
 require_once('inc/uCardScrape.php');
 
 require_once('Balance.php');
+require_once('Deactivate.php');
 require_once('MealHistory.php');
 require_once('FlexHistory.php');
 require_once('MealPlanCheck.php');
@@ -50,7 +51,8 @@ class Functions
                     $this->result = $flex->execute();
                     break;
                 case 'Deactivate':
-                    $this->result['error'] = 'Deactivating your card is not yet implemented.';
+                    $deactivate = new Deactivate($this->username, $this->password, $this->config['ID'], $this->config['DEACTIVATE_URL']);
+                    $this->result = $deactivate->execute();
                     break;
                 default:
                     $this->result['error'] = 'Error executing option, please try again later.';
