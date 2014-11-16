@@ -23,7 +23,7 @@ class MealHistory
         $arr = array('error' => 'Username or password invalid!');
         if ($this->username && $this->password) {
             $form = array('ID' => $this->ID, 'name' => $this->username, 'pass' => $this->password, 'optStudent' => 'optStudent');
-            $html = functions::getPageResult($form, $this->url);
+            $html = functions::checkLogin($form, $this->url);
             if ($html) {
                 $history = functions::findElement($html, '#ctl00_lgnView_cpMain_uiHistory_grdPlan', 0);
                 $rows = functions::findElements($history, '.historyRow,.historyAlternatingRow');

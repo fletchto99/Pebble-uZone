@@ -6,6 +6,7 @@ require_once('inc/uCardScrape.php');
 require_once('Balance.php');
 require_once('MealHistory.php');
 require_once('FlexHistory.php');
+require_once('MealPlanCheck.php');
 
 class Functions
 {
@@ -28,9 +29,13 @@ class Functions
         if ($this->username && $this->password) {
             switch ($method) {
                 case 'CheckLogin':
-                    $form = array('ID' => $this->ID, 'name' => $this->username, 'pass' => $this->password, 'optStudent' => 'optStudent');
-                    $login = self::getPageResult($form, $this->config['LOGIN_URL']);
+                    $form = array('ID' => $this->config['ID'], 'name' => $this->username, 'pass' => $this->password, 'optStudent' => 'optStudent');
+                    $login = self::checkLogin($form, $this->config['LOGIN_URL']);
                     $this->result = array('login' => ($login ? 'success' : 'failed'));
+                    break;
+                case 'MealPlanCheck':
+                    $balance = new MealPlanCheck($this->username, $this->password, $this->config['ID'], $this->config['LOGIN_URL']);
+                    $this->result = $balance->execute();
                     break;
                 case 'Balance':
                     $balance = new Balance($this->username, $this->password, $this->config['ID'], $this->config['BALANCE_URL']);
@@ -80,7 +85,7 @@ class Functions
         return null;
     }
 
-    static function getPageResult($form_fill, $url)
+    static function checkLogin($form_fill, $url)
     {
         $scrape = new uCardScrape($url, $form_fill);
         $html = $scrape->fetchResult();
