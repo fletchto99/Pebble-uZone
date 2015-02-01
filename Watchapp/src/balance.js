@@ -23,7 +23,7 @@ balance.fetch = function fetch(card) {
             },
                  function(data) {
                      if (data.error) {
-                         functions.showAndRemoveCard('Error', data.error, card);
+                         functions.showAndRemoveCard('Error', data.error, '', card);
                          fetchingBalance = false;
                      } else {
                          functions.updateCard('Balance', (data.meal != 'null'? 'Meal: $' + data.meal + '\n' : '') + 'Flex: $' + data.flex, card);
@@ -31,11 +31,11 @@ balance.fetch = function fetch(card) {
                      }
                  },
                  function(error) {
-                     functions.showAndRemoveCard('Error', 'Error contacting server.', card);
+                     functions.showAndRemoveCard('Error', 'Error contacting server.', '', card);
                      fetchingBalance = false;
                  });
         } else {
-            functions.showAndRemoveCard('Error', 'Username and password not configured.', card);
+            functions.showAndRemoveCard('Error', 'Username and password not configured.', '', card);
             fetchingBalance = false;
         }
     }

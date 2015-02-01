@@ -39,7 +39,7 @@
     "shortName": "uOCard",
     "uuid": "23609b8d-f8f4-453b-aed5-81d3d44e6c3e",
     "versionCode": 1,
-    "versionLabel": "1.1",
+    "versionLabel": "1.101",
     "watchapp": {
         "watchface": false
     }

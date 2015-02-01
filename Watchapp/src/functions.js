@@ -17,7 +17,7 @@ var balanceCard = new UI.Card({
 
 //Functions
 functions.setup = function setup() { 
-    var loading = functions.showCard('uOCard Pebble', 'Loading...');
+    var loading = functions.showCard('uOCard Pebble', 'Loading...', '');
     balanceCard.on('click', 'down', function() {
             balance.fetch(balanceCard);
     });
@@ -35,7 +35,7 @@ functions.setup = function setup() {
         },
              function(data) {
                  if (data.error) {
-                     functions.showAndRemoveCard('Error', data.error, loading);
+                     functions.showAndRemoveCard('Error', data.error, '', loading);
                  } else {
                      var menuItems = [
                          {
@@ -92,7 +92,7 @@ functions.setup = function setup() {
                                  flexplan.fetch();
                              }
                              if (event.itemIndex === 3) {
-                                 deactivate.fetch('Deactivate', 'This is a work in progress.');
+                                 deactivate.fetch();
                              }
 
                          });
@@ -105,7 +105,7 @@ functions.setup = function setup() {
                                  flexplan.fetch();
                              }
                              if (event.itemIndex === 2) {
-                                 deactivate.fetch('Deactivate', 'This is a work in progress.');
+                                 deactivate.fetch();
                              }
 
                          });
@@ -113,10 +113,10 @@ functions.setup = function setup() {
                  }
              },
              function(error) {
-                 functions.showAndRemoveCard('Error', 'Error contacting server.', loading);
+                 functions.showAndRemoveCard('Error', 'Error contacting server.', '', loading);
              });
     } else {
-        functions.showAndRemoveCard('Error', 'Username and password not configured.', loading);
+        functions.showAndRemoveCard('Error', 'Username and password not configured.', '', loading);
     }
 };
 
@@ -124,16 +124,12 @@ functions.getSetting = function getSetting(setting) {
    return Settings.data(setting);
 };
 
-functions.showCard = function showCard(title, subtitle) {
-    console.log('called');
-    return functions.showAndRemoveCard(title, subtitle, null);
+functions.showCard = function showCard(title, subtitle, body) {
+    console.log('Body is ' + body);
+    return functions.showAndRemoveCard(title, subtitle, body, null);
 };
 
-functions.showAndRemoveCard = function showAndRemoveCard(title, subtitle, old) {
-    return functions.showAndRemoveCardAdv(title,subtitle,'', old);
-};
-
-functions.showAndRemoveCardAdv = function showAndRemoveCardAdv(title, subtitle, body, old) {
+functions.showAndRemoveCard = function showAndRemoveCard(title, subtitle, body, old) {
     if (old !== null) {
         old.hide();
     }

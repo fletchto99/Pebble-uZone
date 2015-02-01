@@ -5,7 +5,7 @@ var ajax = require('ajax');
 var flexplan = require('flexplan');
 
 flexplan.fetch = function fetch() { 
-    var card = functions.showCard('Flex History', 'Loading...');
+    var card = functions.showCard('Flex History', 'Loading...', '');
     if (functions.getSetting('username') && functions.getSetting('password')) {
         ajax({
             url: 'http://fletchto99.com/other/uzone-pebble/web/api.php',
@@ -20,7 +20,7 @@ flexplan.fetch = function fetch() {
           },
           function(data) {
               if (data.error) {
-                  functions.showAndRemoveCard('Error', data.error, card);
+                  functions.showAndRemoveCard('Error', data.error, '', card);
               } else {
                   card.hide();
                   var menuItems = Array(data.length);
@@ -44,9 +44,9 @@ flexplan.fetch = function fetch() {
               }
           },
           function(error) {
-              functions.showAndRemoveCard('Error', 'Error contacting server.', card);
+              functions.showAndRemoveCard('Error', 'Error contacting server.', '', card);
           });
     } else {
-        functions.showAndRemoveCard('Error', 'Username and password not configured.', card);
+        functions.showAndRemoveCard('Error', 'Username and password not configured.', '', card);
     }
 };

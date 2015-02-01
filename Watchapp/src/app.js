@@ -12,7 +12,6 @@ Settings.config(
     var data = JSON.parse(decodeURIComponent(e.response));
     Settings.data('username', data.username);
     Settings.data('password', data.password);
-    functions.setup();
   }
 );
 
