@@ -23,7 +23,7 @@ functions.setup = function setup() {
     });
     if (Settings.data('username') && Settings.data('password')) {
         ajax({
-            url: 'http://fletchto99.com/other/uzone-pebble/web/api.php',
+            url: 'http://fletchto99.com/other/pebble/uzone/web/api.php',
             type: 'json',
             method: 'post',
             data:{

@@ -8,7 +8,7 @@ flexplan.fetch = function fetch() {
     var card = functions.showCard('Flex History', 'Loading...', '');
     if (functions.getSetting('username') && functions.getSetting('password')) {
         ajax({
-            url: 'http://fletchto99.com/other/uzone-pebble/web/api.php',
+            url: 'http://fletchto99.com/other/pebble/uzone/web/api.php',
             type: 'json',
             method: 'post',
             data:{
