@@ -32,8 +32,8 @@ class MealHistory
                     $arr = array();
                     foreach ($rows as $row) {
                         $arr[$i] = array('date' => functions::elementToPlaintext(functions::findElement($row, 'td', 0)),
-                                     'price' => functions::elementToPlaintext(functions::findElement($row, 'td', 1)),
-                                     'description' => functions::elementToPlaintext(functions::findElement($row, 'td', 3)));
+                            'price' => functions::elementToPlaintext(functions::findElement($row, 'td', 1)),
+                            'description' => functions::elementToPlaintext(functions::findElement($row, 'td', 3)));
                         $i++;
                     }
                 } else {

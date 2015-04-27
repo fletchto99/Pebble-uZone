@@ -74,7 +74,7 @@ class Functions
 
     static function elementToPlaintext($DOMelement)
     {
-        return $DOMelement -> plaintext;
+        return $DOMelement->plaintext;
     }
 
     static function findElements($html, $class)

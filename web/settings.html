@@ -1,118 +1,118 @@
 <!DOCTYPE html>
 <html>
-    <head lang="en">
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-        <title>uOCard Pebble Settings</title>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <title>uOCard Pebble Settings</title>
 
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="style/custom.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="style/custom.css"/>
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
-        <script>
+    <script>
 
-            function getQueryParam(variable, default_) {
-                var query = location.search.substring(1);
-                var vars = query.split('&');
-                for (var i = 0; i < vars.length; i++) {
-                    var pair = vars[i].split('=');
-                    if (pair[0] == variable) {
-                        return decodeURIComponent(pair[1]);
-                    }
+        function getQueryParam(variable, default_) {
+            var query = location.search.substring(1);
+            var vars = query.split('&');
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split('=');
+                if (pair[0] == variable) {
+                    return decodeURIComponent(pair[1]);
                 }
-                return default_ || false;
             }
+            return default_ || false;
+        }
 
-            function saveOptions() {
-                var options = {
-                    'username': $('#username').val(),
-                    'password': $('#password').val()
-                }
-                return options;
+        function saveOptions() {
+            var options = {
+                'username': $('#username').val(),
+                'password': $('#password').val()
             }
+            return options;
+        }
 
-            $(document).ready(function () {
-                $('#progress').hide();
-                $('#cancel').click(function () {
-                    document.location = getQueryParam('return_to', 'pebblejs://close#');
-                });
-                $('#save').click(function () {
-                    if ($('#username').val() == '' || $('#password').val() == '') {
-                        alert('Invalid username or password entered!');
-                        return;
-                    }
-                    $('#options').fadeOut('1000', function () {
-                        $('#progress').fadeIn('1000');
-                    });
-
-
-                    $.ajax({
-                        type: "POST",
-                        url: "api.php",
-                        dataType: "json",
-                        data: {
-                            method: 'CheckLogin',
-                            username: $('#username').val(),
-                            password: $('#password').val()
-                        },
-                        success: function (data) {
-                            if (data.login == 'success') {
-                                $('#progress').fadeOut('1000');
-                                document.location = getQueryParam('return_to', 'pebblejs://close#') + encodeURIComponent(JSON.stringify(saveOptions()));
-                            } else {
-                                alert('Invalid username or password entered!');
-                                $('#progress').fadeOut('1000', function () {
-                                    $('#options').fadeIn('1000');
-                                });
-
-                            }
-                        }
-                    });
-
-                });
-                if (getQueryParam('username', false)) {
-                    $('#username').val(parseInt(getQueryParam('username', false)));
-                }
+        $(document).ready(function () {
+            $('#progress').hide();
+            $('#cancel').click(function () {
+                document.location = getQueryParam('return_to', 'pebblejs://close#');
             });
-        </script>
-    </head>
-    <body>
-        <div id="container">
-            <div id="header">
-                <h1>uZone Account</h1>
-            </div>
-            <div id="options">
-                <div class="form-group">
-                    <label for="username" class="form-label">Student ID:</label>
-                    <input type="number" class="form-control" id="username">
-                </div>
-                <div class="form-group">
-                    <label for="password" class="form-label">Password (All caps):</label>
-                    <input type="password" class="form-control" id="password">
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <button type="submit" id="cancel" class="btn btn-primary btn-block">Cancel</button>
-                    </div>
-                    <div class="col-xs-6">
-                        <button type="submit" id="save" class="btn btn-success btn-block">Save</button>
-                    </div>
+            $('#save').click(function () {
+                if ($('#username').val() == '' || $('#password').val() == '') {
+                    alert('Invalid username or password entered!');
+                    return;
+                }
+                $('#options').fadeOut('1000', function () {
+                    $('#progress').fadeIn('1000');
+                });
 
-                </div>
-            </div>
-            <div id="progress">
-                <h2>
-                    Saving....
-                </h2>
 
-                <div class="progress">
-                    <div class="progress-bar progress-bar-striped active" style="width: 100%"></div>
-                </div>
-            </div>
-            <img src="style/logo.png"/>
+                $.ajax({
+                    type: "POST",
+                    url: "api.php",
+                    dataType: "json",
+                    data: {
+                        method: 'CheckLogin',
+                        username: $('#username').val(),
+                        password: $('#password').val()
+                    },
+                    success: function (data) {
+                        if (data.login == 'success') {
+                            $('#progress').fadeOut('1000');
+                            document.location = getQueryParam('return_to', 'pebblejs://close#') + encodeURIComponent(JSON.stringify(saveOptions()));
+                        } else {
+                            alert('Invalid username or password entered!');
+                            $('#progress').fadeOut('1000', function () {
+                                $('#options').fadeIn('1000');
+                            });
+
+                        }
+                    }
+                });
+
+            });
+            if (getQueryParam('username', false)) {
+                $('#username').val(parseInt(getQueryParam('username', false)));
+            }
+        });
+    </script>
+</head>
+<body>
+<div id="container">
+    <div id="header">
+        <h1>uZone Account</h1>
+    </div>
+    <div id="options">
+        <div class="form-group">
+            <label for="username" class="form-label">Student ID:</label>
+            <input type="number" class="form-control" id="username">
         </div>
-    </body>
+        <div class="form-group">
+            <label for="password" class="form-label">Password (All caps):</label>
+            <input type="password" class="form-control" id="password">
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <button type="submit" id="cancel" class="btn btn-primary btn-block">Cancel</button>
+            </div>
+            <div class="col-xs-6">
+                <button type="submit" id="save" class="btn btn-success btn-block">Save</button>
+            </div>
+
+        </div>
+    </div>
+    <div id="progress">
+        <h2>
+            Saving....
+        </h2>
+
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped active" style="width: 100%"></div>
+        </div>
+    </div>
+    <img src="style/logo.png"/>
+</div>
+</body>
 </html>

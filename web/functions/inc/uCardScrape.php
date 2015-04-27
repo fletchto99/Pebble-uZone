@@ -91,8 +91,7 @@ class uCardScrape
         curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookie);
         curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookie);
 
-        if ($post)
-        {
+        if ($post) {
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
         }
