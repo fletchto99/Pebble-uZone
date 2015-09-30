@@ -39,8 +39,13 @@
   "shortName": "uOCard",
   "uuid": "23609b8d-f8f4-453b-aed5-81d3d44e6c3e",
   "versionCode": 1,
-  "versionLabel": "1.200",
+  "versionLabel": "2.00",
   "watchapp": {
     "watchface": false
-  }
+  },
+  "targetPlatforms": [
+    "aplite",
+    "basalt"
+  ],
+  "sdkVersion": "3"
 }
