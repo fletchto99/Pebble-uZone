@@ -5,7 +5,7 @@ var ajax = require('ajax');
 var mealplan = module.exports;
 
 mealplan.fetch = function fetch() {
-    var card = functions.showCard('Meal History', 'Loading...', '');
+    var card = functions.showCard('Dining History', 'Loading...', '');
     if (functions.getSetting('username') && functions.getSetting('password')) {
         ajax({
                 url: 'http://fletchto99.com/other/pebble/uzone/web/api.php',
@@ -23,7 +23,7 @@ mealplan.fetch = function fetch() {
                     functions.showAndRemoveCard('Error', data.error, '', card);
                 } else {
                     card.hide();
-                    var menuItems = Array(data.length);
+                    var menuItems = new Array(data.length);
                     for (var i = 0; i < data.length; i++) {
                         menuItems[i] = {
                             title: data[i].price,
@@ -33,7 +33,7 @@ mealplan.fetch = function fetch() {
                     }
                     var history = new UI.Menu({
                         sections: [{
-                            title: 'Mealplan History',
+                            title: 'Dining History',
                             items: menuItems
                         }]
                     });
@@ -43,7 +43,7 @@ mealplan.fetch = function fetch() {
                     history.show();
                 }
             },
-            function (error) {
+            function () {
                 functions.showAndRemoveCard('Error', 'Error contacting server.', '', card);
             });
     } else {

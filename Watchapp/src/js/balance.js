@@ -26,7 +26,7 @@ balance.fetch = function fetch(card) {
                         functions.showAndRemoveCard('Error', data.error, '', card);
                         fetchingBalance = false;
                     } else {
-                        functions.updateCard('Balance', (data.meal != 'null' ? 'Meal: $' + data.meal + '\n' : '') + 'Flex: $' + data.flex, card);
+                        functions.updateCard('Balance', (data.meal != 'null' ? 'Dining: $' + data.meal + '\n' : '') + 'Flex: $' + data.flex, card);
                         fetchingBalance = false;
                     }
                 },

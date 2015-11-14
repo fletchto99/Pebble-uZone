@@ -40,11 +40,11 @@ functions.setup = function setup() {
                     var menuItems = [
                         {
                             title: 'Balance',
-                            subtitle: 'Meal & flex balance.'
+                            subtitle: 'Dining & flex balance.'
                         },
                         {
-                            title: 'Meal History',
-                            subtitle: 'Last 10 meal purchases.'
+                            title: 'Dining History',
+                            subtitle: 'Last 10 dining purchases.'
                         },
                         {
                             title: 'Flex History',
@@ -59,7 +59,7 @@ functions.setup = function setup() {
                         menuItems = [
                             {
                                 title: 'Balance',
-                                subtitle: 'Meal & flex balance.'
+                                subtitle: 'Flex balance.'
                             },
                             {
                                 title: 'Flex History',
