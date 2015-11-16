@@ -4,7 +4,7 @@ var functions = require('functions');
 
 //Load the settings
 Settings.config(
-    {url: ('http://fletchto99.com/other/pebble/uzone/web/settings.html' + (Settings.data('username') ? '?username=' + encodeURIComponent(Settings.data('username')) : ''))},
+    {url: ('https://fletchto99.com/other/pebble/uzone/web/settings.html' + (Settings.data('username') ? '?username=' + encodeURIComponent(Settings.data('username')) : ''))},
     function (e) {
         if (!e.response) {
             return;

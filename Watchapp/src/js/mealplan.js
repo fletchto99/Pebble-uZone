@@ -8,7 +8,7 @@ mealplan.fetch = function fetch() {
     var card = functions.showCard('Dining History', 'Loading...', '');
     if (functions.getSetting('username') && functions.getSetting('password')) {
         ajax({
-                url: 'http://fletchto99.com/other/pebble/uzone/web/api.php',
+                url: 'https://fletchto99.com/other/pebble/uzone/web/api.php',
                 type: 'json',
                 method: 'post',
                 data: {
