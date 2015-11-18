@@ -1,6 +1,7 @@
 var functions = require('functions');
 var UI = require('ui');
 var ajax = require('ajax');
+var config = require('Config.json');
 
 var flexplan = require('flexplan');
 
@@ -8,7 +9,7 @@ flexplan.fetch = function fetch() {
     var card = functions.showCard('Flex History', 'Loading...', '');
     if (functions.getSetting('username') && functions.getSetting('password')) {
         ajax({
-                url: 'https://fletchto99.com/other/pebble/uzone/web/api.php',
+                url: config.API_URL,
                 type: 'json',
                 method: 'post',
                 data: {

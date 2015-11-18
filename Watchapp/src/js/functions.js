@@ -1,6 +1,7 @@
 var UI = require('ui');
 var ajax = require('ajax');
 var Settings = require('settings');
+var config = require('Config.json');
 
 var balance = require('balance');
 var mealplan = require('mealplan');
@@ -16,19 +17,19 @@ var balanceCard = new UI.Card({
 });
 
 //Functions
-functions.setup = function setup() {
+functions.init = function() {
     var loading = functions.showCard('uOCard Pebble', 'Loading...', '');
     balanceCard.on('click', 'down', function () {
         balance.fetch(balanceCard);
     });
-    if (Settings.data('username') && Settings.data('password')) {
+    if (functions.getSetting('username') && functions.getSetting('password')) {
         ajax({
-                url: 'https://fletchto99.com/other/pebble/uzone/web/api.php',
+                url: config.API_URL,
                 type: 'json',
                 method: 'post',
                 data: {
-                    username: Settings.data('username'),
-                    password: Settings.data('password'),
+                    username: functions.getSetting('username'),
+                    password: functions.getSetting('password'),
                     method: 'MealPlanCheck'
                 },
                 cache: false
@@ -112,16 +113,19 @@ functions.setup = function setup() {
                     }
                 }
             },
-            function (error) {
+            function () {
                 functions.showAndRemoveCard('Error', 'Error contacting server.', '', loading);
             });
     } else {
-        functions.showAndRemoveCard('Error', 'Username and password not configured.', '', loading);
+        return functions.showAndRemoveCard('Error', 'Username and password not configured.', '', loading);
     }
 };
 
-functions.getSetting = function getSetting(setting) {
-    return Settings.data(setting);
+functions.getSetting = function (setting, default_setting) {
+    if (!default_setting) {
+        default_setting = false;
+    }
+    return Settings.option(setting) !== null ? Settings.option(setting) : default_setting;
 };
 
 functions.showCard = function showCard(title, subtitle, body) {

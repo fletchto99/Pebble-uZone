@@ -29,7 +29,7 @@
         "type": "font"
       },
       {
-        "file": "images/icon.png",
+        "file": "images/menu_icon.png",
         "menuIcon": true,
         "name": "IMAGES_ICON_PNG",
         "type": "png"
@@ -39,7 +39,7 @@
   "shortName": "uOCard",
   "uuid": "23609b8d-f8f4-453b-aed5-81d3d44e6c3e",
   "versionCode": 1,
-  "versionLabel": "2.02",
+  "versionLabel": "2.03",
   "watchapp": {
     "watchface": false
   },

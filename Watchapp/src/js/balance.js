@@ -1,5 +1,6 @@
 var functions = require('functions');
 var ajax = require('ajax');
+var config = require('Config.json');
 
 var fetchingBalance = false;
 
@@ -11,7 +12,7 @@ balance.fetch = function fetch(card) {
         functions.updateCard('Balance', 'Loading...', card);
         if (functions.getSetting('username') && functions.getSetting('password')) {
             ajax({
-                    url: 'https://fletchto99.com/other/pebble/uzone/web/api.php',
+                    url: config.API_URL,
                     type: 'json',
                     method: 'post',
                     data: {

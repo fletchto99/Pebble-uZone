@@ -1,19 +1,23 @@
 //Imports
 var Settings = require('settings');
 var functions = require('functions');
+var config = require('Config.json');
+
+var card = null;
 
 //Load the settings
 Settings.config(
-    {url: ('https://fletchto99.com/other/pebble/uzone/web/settings.html' + (Settings.data('username') ? '?username=' + encodeURIComponent(Settings.data('username')) : ''))},
+    {url: config.SETTINGS_URL},
     function (e) {
-        if (!e.response) {
-            return;
+        if (card != null) {
+            var temp = functions.init();
+            card.hide();
+            card = temp;
         }
-        var data = JSON.parse(decodeURIComponent(e.response));
-        Settings.data('username', data.username);
-        Settings.data('password', data.password);
     }
 );
 
 //Setup the app
-functions.setup();
+setTimeout(function() {
+    card = functions.init();
+}, 800);
