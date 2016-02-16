@@ -39,10 +39,11 @@
   "shortName": "uOCard",
   "targetPlatforms": [
     "aplite",
-    "basalt"
+    "basalt",
+    "chalk"
   ],
   "uuid": "23609b8d-f8f4-453b-aed5-81d3d44e6c3e",
-  "versionLabel": "2.04",
+  "versionLabel": "2.05",
   "watchapp": {
     "watchface": false
   }
